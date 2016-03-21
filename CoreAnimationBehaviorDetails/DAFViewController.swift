@@ -481,8 +481,6 @@ class DAFViewController: UIViewController
         }
     }
     
-    
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
