@@ -16,59 +16,94 @@ class DAFViewController: UIViewController
     private var testLayer = CALayer()
     private var testGenerator : Array<(DAFViewController -> () -> (), String)>.Generator?
     private var tests = [
-        (DAFViewController.basicImplicitAnimationTest, "Basic Implicit Animation Test"),
-        (DAFViewController.basicImplicitAnimationWithLongerDurationTest, "Basic Implicit Animation With Longer Duration Test"),
-        (DAFViewController.basicImplicitAnimationWithLongerDurationPresentationLayerTest, "Basic Implicit Animation With Longer Duration Presentation Layer Test"),
-        (DAFViewController.basicImplicitAnimationWithLongerDurationMultiplePresentationLayerTest, "Basic Implicit Animation With Longer Duration Multiple Presentation Layer Test")
+        (basicImplicitAnimationTest,
+            "Basic Implicit Animation Test"),
+        (basicImplicitAnimationWithLongerDurationTest,
+            "Basic Implicit Animation With Longer Duration Test"),
+        (basicImplicitAnimationWithLongerDurationPresentationLayerTest,
+            "Basic Implicit Animation With Longer Duration Presentation Layer Test"),
+        (basicImplicitAnimationWithLongerDurationPresentationLayerLongerInitialSleepTest,
+            "Basic Implicit Animation With Longer Duration Presentation Layer Longer Initial Sleep Test"),
+        (basicImplicitAnimationWithLongerDurationMultiplePresentationLayerTest,
+            "Basic Implicit Animation With Longer Duration Multiple Presentation Layer Test"),
+        (basicImplicitAnimationWithLongerDurationMultiplePresentationLayerAndFlushTest,
+            "Basic Implicit Animation With Longer Duration Multiple Presentation Layer and Flushes Test"),
+        (basicExplicitAnimationTest,
+            "Basic Explicit Animation Test"),
+        (basicExplicitAnimationWithExplicitTransactionTest,
+            "Basic Explicit Animation With Explicit Transaction Test"),
+        (basicExplicitAnimationWithExplicitTransactionPresentationLayerTest,
+            "Basic Explicit Animation With Explicit Transaction Presentation Layer Test"),
+        (basicExplicitAnimationWithExplicitTransactionPresentationLayerLongerInitialSleepTest,
+            "Basic Explicit Animation With Explicit Transaction Presentation Layer Longer Initial Sleep Test"),
+        (basicExplicitAnimationWithExplicitTransactionMultiplePresentationLayerTest,
+            "Basic Explicit Animation With Explicit Transaction Multiple Presentation Layer Test"),
+        (basicExplicitAnimationWithExplicitTransactionMultiplePresentationLayerAndFlushTest,
+            "Basic Explicit Animation With Explicit Transaction Multiple Presentation Layer and Flushes Test"),
+        (basicExplicitAnimationImplicitValuesWithExplicitTransactionMultiplePresentationLayerAndFlushBrokenTest,
+            "Basic Explicit Animation Implicit Values With Explicit Transaction Multiple Presentation Layer and Flushes Broken Test")
     ]
     
     func basicImplicitAnimationTest()
     {
-        print("Explicit animation duration: \(CATransaction.animationDuration())")
+        print("Implicit animation duration: \(CATransaction.animationDuration())")
         
-        print("Model layer starting position: \(self.testLayer.position)")
-        
+        print("Implicit animation layer 'from' position: \(self.testLayer.position)")
         self.testLayer.position = CGPoint(x: 50, y: 500)
-        
-        print("Model layer ending position: \(self.testLayer.position)")
+        print("Implicit animation layer 'to' position: \(self.testLayer.position)")
     }
 
     func basicImplicitAnimationWithLongerDurationTest()
     {
         CATransaction.setAnimationDuration(5.0)
-
-        print("Explicit animation duration: \(CATransaction.animationDuration())")
+        print("Explicit transaction animation duration: \(CATransaction.animationDuration())")
         
-        print("Model layer starting position: \(self.testLayer.position)")
-        
+        print("Implicit animation layer 'from' position: \(self.testLayer.position)")
         self.testLayer.position = CGPoint(x: 50, y: 500)
-        
-        print("Model layer ending position: \(self.testLayer.position)")
+        print("Implicit animation layer 'to' position: \(self.testLayer.position)")
     }
     
     func basicImplicitAnimationWithLongerDurationPresentationLayerTest()
     {
         CATransaction.begin()
-
-        print("Explicit Transaction Begin")
+        print("Explicit transaction begin")
         
         CATransaction.setAnimationDuration(5.0)
+        print("Explicit transaction animation duration: \(CATransaction.animationDuration())")
         
-        print("Explicit animation duration: \(CATransaction.animationDuration())")
-        
-        print("Model layer starting position: \(self.testLayer.position)")
-        
+        print("Implicit animation layer 'from' position: \(self.testLayer.position)")
         self.testLayer.position = CGPoint(x: 50, y: 500)
-        
-        print("Model layer ending position: \(self.testLayer.position)")
+        print("Implicit animation layer 'to' position: \(self.testLayer.position)")
         
         CATransaction.commit()
-        
-        print("Explicit Transaction Commit")
+        print("Explicit transaction commit")
         
         print("Sleep for one second")
-        
         sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+    
+    func basicImplicitAnimationWithLongerDurationPresentationLayerLongerInitialSleepTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setAnimationDuration(5.0)
+        print("Explicit transaction animation duration: \(CATransaction.animationDuration())")
+        
+        print("Implicit animation layer 'from' position: \(self.testLayer.position)")
+        self.testLayer.position = CGPoint(x: 50, y: 500)
+        print("Implicit animation layer 'to' position: \(self.testLayer.position)")
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for two seconds")
+        sleep(2)
         
         if let presentationLayer = self.testLayer.presentationLayer()
         {
@@ -79,25 +114,19 @@ class DAFViewController: UIViewController
     func basicImplicitAnimationWithLongerDurationMultiplePresentationLayerTest()
     {
         CATransaction.begin()
-        
-        print("Explicit Transaction Begin")
+        print("Explicit transaction begin")
         
         CATransaction.setAnimationDuration(5.0)
+        print("Explicit transaction animation duration: \(CATransaction.animationDuration())")
         
-        print("Explicit animation duration: \(CATransaction.animationDuration())")
-        
-        print("Model layer starting position: \(self.testLayer.position)")
-        
+        print("Implicit animation layer 'from' position: \(self.testLayer.position)")
         self.testLayer.position = CGPoint(x: 50, y: 500)
-        
-        print("Model layer ending position: \(self.testLayer.position)")
+        print("Implicit animation layer 'to' position: \(self.testLayer.position)")
         
         CATransaction.commit()
-        
-        print("Explicit Transaction Commit")
+        print("Explicit transaction commit")
         
         print("Sleep for one second")
-        
         sleep(1)
         
         if let presentationLayer = self.testLayer.presentationLayer()
@@ -106,7 +135,6 @@ class DAFViewController: UIViewController
         }
      
         print("Sleep for one second")
-        
         sleep(1)
         
         if let presentationLayer = self.testLayer.presentationLayer()
@@ -114,6 +142,346 @@ class DAFViewController: UIViewController
             print("Presentation layer position: \(presentationLayer.position)")
         }
     }
+    
+    func basicImplicitAnimationWithLongerDurationMultiplePresentationLayerAndFlushTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setAnimationDuration(5.0)
+        print("Explicit transaction animation duration: \(CATransaction.animationDuration())")
+        
+        print("Implicit animation layer 'from' position: \(self.testLayer.position)")
+        self.testLayer.position = CGPoint(x: 50, y: 500)
+        print("Implicit animation layer 'to' position: \(self.testLayer.position)")
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        print("Flush transaction")
+        CATransaction.flush()
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+    
+    func basicExplicitAnimationTest()
+    {
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+    
+        self.testLayer.position = toPosition
+
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        animation.fromValue = NSValue(CGPoint: fromPosition)
+        print("Explicit animation layer 'from' position: \(animation.fromValue)")
+        
+        animation.toValue = NSValue(CGPoint: CGPoint(x: 50, y: 500))
+        print("Explicit animation layer 'to' position: \(animation.toValue)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+    }
+    
+    func basicExplicitAnimationWithExplicitTransactionTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+        
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+        
+        self.testLayer.position = toPosition
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        animation.fromValue = NSValue(CGPoint: fromPosition)
+        print("Explicit animation layer 'from' position: \(animation.fromValue)")
+        
+        animation.toValue = NSValue(CGPoint: CGPoint(x: 50, y: 500))
+        print("Explicit animation layer 'to' position: \(animation.toValue)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+    }
+    
+    func basicExplicitAnimationWithExplicitTransactionPresentationLayerTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+        
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+        
+        self.testLayer.position = toPosition
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        animation.fromValue = NSValue(CGPoint: fromPosition)
+        print("Explicit animation layer 'from' position: \(animation.fromValue)")
+        
+        animation.toValue = NSValue(CGPoint: CGPoint(x: 50, y: 500))
+        print("Explicit animation layer 'to' position: \(animation.toValue)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+
+    func basicExplicitAnimationWithExplicitTransactionPresentationLayerLongerInitialSleepTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+        
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+        
+        self.testLayer.position = toPosition
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        animation.fromValue = NSValue(CGPoint: fromPosition)
+        print("Explicit animation layer 'from' position: \(animation.fromValue)")
+        
+        animation.toValue = NSValue(CGPoint: CGPoint(x: 50, y: 500))
+        print("Explicit animation layer 'to' position: \(animation.toValue)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for two seconds")
+        sleep(2)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+    
+    func basicExplicitAnimationWithExplicitTransactionMultiplePresentationLayerTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+        
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+        
+        self.testLayer.position = toPosition
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        animation.fromValue = NSValue(CGPoint: fromPosition)
+        print("Explicit animation layer 'from' position: \(animation.fromValue)")
+        
+        animation.toValue = NSValue(CGPoint: CGPoint(x: 50, y: 500))
+        print("Explicit animation layer 'to' position: \(animation.toValue)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+    
+    func basicExplicitAnimationWithExplicitTransactionMultiplePresentationLayerAndFlushTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+        
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+        
+        self.testLayer.position = toPosition
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        animation.fromValue = NSValue(CGPoint: fromPosition)
+        print("Explicit animation layer 'from' position: \(animation.fromValue)")
+        
+        animation.toValue = NSValue(CGPoint: CGPoint(x: 50, y: 500))
+        print("Explicit animation layer 'to' position: \(animation.toValue)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        print("Flush transaction")
+        CATransaction.flush()
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+
+    func basicExplicitAnimationImplicitValuesWithExplicitTransactionMultiplePresentationLayerAndFlushBrokenTest()
+    {
+        CATransaction.begin()
+        print("Explicit transaction begin")
+        
+        CATransaction.setDisableActions(true)
+        print("Disable transaction actions")
+        
+        let fromPosition = self.testLayer.position
+        print("Model layer position 'from' position: \(fromPosition)")
+        
+        let toPosition = CGPoint(x: 50, y: 500)
+        print("Model layer 'to' position: \(toPosition)")
+        
+        self.testLayer.position = toPosition
+        
+        let animation = CABasicAnimation(keyPath: "position")
+        print("Explicit CABasicAnimation on layer property \(animation.keyPath)")
+        
+        animation.duration = 5.0
+        print("Explicit animation duration: \(animation.duration)")
+        
+        print("Add animation to test layer")
+        self.testLayer.addAnimation(animation, forKey: nil)
+        
+        CATransaction.commit()
+        print("Explicit transaction commit")
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+        
+        print("Sleep for one second")
+        sleep(1)
+        
+        print("Flush transaction")
+        CATransaction.flush()
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+    
+    
     
     override func viewDidLoad()
     {
