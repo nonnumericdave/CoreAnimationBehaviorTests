@@ -16,12 +16,32 @@ class DAFViewController: UIViewController
     private var testLayer = CALayer()
     private var testGenerator : Array<(DAFViewController -> () -> (), String)>.Generator?
     private var tests = [
-        (DAFViewController.basicTest, "Basic Implicit Animation Test")
+        (DAFViewController.basicImplicitAnimationTest, "Basic Implicit Animation Test"),
+        (DAFViewController.basicImplicitAnimationWithLongerDurationTest, "Basic Implicit Animation With Longer Duration Test")
     ]
     
-    func basicTest()
+    func basicImplicitAnimationTest()
     {
+        print("Explicit animation duration: \(CATransaction.animationDuration())")
+        
+        print("Model layer starting position: \(self.testLayer.position)")
+        
         self.testLayer.position = CGPoint(x: 50, y: 500)
+        
+        print("Model layer ending position: \(self.testLayer.position)")
+    }
+
+    func basicImplicitAnimationWithLongerDurationTest()
+    {
+        CATransaction.setAnimationDuration(5.0)
+
+        print("Explicit animation duration: \(CATransaction.animationDuration())")
+        
+        print("Model layer starting position: \(self.testLayer.position)")
+        
+        self.testLayer.position = CGPoint(x: 50, y: 500)
+        
+        print("Model layer ending position: \(self.testLayer.position)")
     }
     
     override func viewDidLoad()
