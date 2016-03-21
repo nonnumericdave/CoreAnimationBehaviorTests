@@ -18,7 +18,8 @@ class DAFViewController: UIViewController
     private var tests = [
         (DAFViewController.basicImplicitAnimationTest, "Basic Implicit Animation Test"),
         (DAFViewController.basicImplicitAnimationWithLongerDurationTest, "Basic Implicit Animation With Longer Duration Test"),
-        (DAFViewController.basicImplicitAnimationWithLongerDurationPresentationLayerTest, "Basic Implicit Animation With Longer Duration Presentation Layer Test")
+        (DAFViewController.basicImplicitAnimationWithLongerDurationPresentationLayerTest, "Basic Implicit Animation With Longer Duration Presentation Layer Test"),
+        (DAFViewController.basicImplicitAnimationWithLongerDurationMultiplePresentationLayerTest, "Basic Implicit Animation With Longer Duration Multiple Presentation Layer Test")
     ]
     
     func basicImplicitAnimationTest()
@@ -65,6 +66,45 @@ class DAFViewController: UIViewController
         
         print("Explicit Transaction Commit")
         
+        print("Sleep for one second")
+        
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+    }
+    
+    func basicImplicitAnimationWithLongerDurationMultiplePresentationLayerTest()
+    {
+        CATransaction.begin()
+        
+        print("Explicit Transaction Begin")
+        
+        CATransaction.setAnimationDuration(5.0)
+        
+        print("Explicit animation duration: \(CATransaction.animationDuration())")
+        
+        print("Model layer starting position: \(self.testLayer.position)")
+        
+        self.testLayer.position = CGPoint(x: 50, y: 500)
+        
+        print("Model layer ending position: \(self.testLayer.position)")
+        
+        CATransaction.commit()
+        
+        print("Explicit Transaction Commit")
+        
+        print("Sleep for one second")
+        
+        sleep(1)
+        
+        if let presentationLayer = self.testLayer.presentationLayer()
+        {
+            print("Presentation layer position: \(presentationLayer.position)")
+        }
+     
         print("Sleep for one second")
         
         sleep(1)
