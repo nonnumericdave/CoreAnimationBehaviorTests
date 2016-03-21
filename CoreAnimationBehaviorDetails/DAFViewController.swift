@@ -10,8 +10,14 @@ import UIKit
 
 class DAFViewController: UIViewController
 {
+    private var testLayer = CALayer()
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        self.testLayer.backgroundColor = UIColor.blueColor().CGColor
+        self.testLayer.frame = CGRectMake(0, 0, 100, 100)
+        self.view.layer.addSublayer(self.testLayer)
     }
 }
